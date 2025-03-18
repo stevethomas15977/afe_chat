@@ -26,7 +26,6 @@ resource "aws_lightsail_instance" "instance" {
         export APP_SECRET="${var.appsecret}"
         export ENV="${var.env}"
         export APP="afe_chat"
-        export APP_PATH=$HOME/$APP
         export LANGCHAIN_API_KEY="${var.langchain_api_key}"
         export OPENAI_API_KEY="${var.openai_api_key}"
         export SERPAPI_API_KEY="${var.serpapi_api_key}"
@@ -37,8 +36,6 @@ resource "aws_lightsail_instance" "instance" {
 
         # Clone the GitHub repository
         cd $HOME
-        mkdir -p $APP_PATH
-        cd $APP_PATH
         git clone https://github.com/stevethomas15977/afe_chat.git .
         git checkout $BRANCH_NAME
         
@@ -48,7 +45,6 @@ resource "aws_lightsail_instance" "instance" {
         VERSION="1.0"
         ENV="$ENV"
         APP="$APP"
-        APP_PATH="$APP_PATH"
         USERNAME="afe_chat"
         APP_SECRET="$APP_SECRET"
         LANGCHAIN_API_KEY="$LANGCHAIN_API_KEY"
@@ -58,7 +54,6 @@ resource "aws_lightsail_instance" "instance" {
         EOG
 
         # Create a python virtual environment
-        cd $HOME
         python_version=$(python3 --version | awk '{print $2}')
         $HOME/.local/bin/uv venv --python $python_version
         $HOME/.local/bin/uv sync  
