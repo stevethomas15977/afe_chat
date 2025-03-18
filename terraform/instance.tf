@@ -19,22 +19,23 @@ resource "aws_lightsail_instance" "instance" {
         #!/bin/bash
         apt-get update -y
 
-        # Install UV
-        curl -LsSf https://astral.sh/uv/install.sh | sh
-        source $HOME/.local/bin/env
-        
         # Set up the environment variables
+        export HOME="/home/ubuntu"
         export BRANCH_NAME="${var.branch}"
         export GH_PAT="${var.ghpat}"
         export APP_SECRET="${var.appsecret}"
         export ENV="${var.env}"
         export APP="afe_chat"
-        export APP_ROOT="/home/ubuntu"
+        export APP_ROOT=$HOME
         export APP_PATH=$APP_ROOT/$APP
         export LANGCHAIN_API_KEY="${var.langchain_api_key}"
         export OPENAI_API_KEY="${var.openai_api_key}"
         export SERPAPI_API_KEY="${var.serpapi_api_key}"
         
+        # Install UV
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        source $HOME/.local/bin/env
+
         # Clone the GitHub repository
         cd $APP_ROOT
         mkdir -p $APP_PATH
@@ -43,6 +44,7 @@ resource "aws_lightsail_instance" "instance" {
         git checkout $BRANCH_NAME
 
         sh -c "cat > $APP_PATH/.env" <<EOG
+        HOME="$HOME"
         PYTHONPATH="$PYTHONPATH:models:helpers:services:database"
         VERSION="1.0"
         ENV="$ENV"
@@ -62,7 +64,7 @@ resource "aws_lightsail_instance" "instance" {
         uv venv --python $python_version
 
         # Adjust permissions
-        chown -R ubuntu:ubuntu $APP_PATH
+        chown -R ubuntu:ubuntu $HOME
 
         touch /var/log/user_data_complete
         chmod 644 /var/log/user_data_complete
