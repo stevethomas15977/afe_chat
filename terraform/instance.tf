@@ -33,7 +33,7 @@ resource "aws_lightsail_instance" "instance" {
         export APP_PATH=$APP_ROOT/$APP
         export LANGCHAIN_API_KEY="${var.langchain_api_key}"
         export OPENAI_API_KEY="${var.openai_api_key}"
-        export SERP_API_KEY="${var.serpapi_api_key}"
+        export SERPAPI_API_KEY="${var.serpapi_api_key}"
         
         # Clone the GitHub repository
         cd $APP_ROOT
@@ -54,7 +54,7 @@ resource "aws_lightsail_instance" "instance" {
         LANGCHAIN_API_KEY="$LANGCHAIN_API_KEY"
         LANGCHAIN_TRACING_V2="true"
         OPENAI_API_KEY="$OPENAI_API_KEY"
-        SERP_API_KEY="$SERP_API_KEY"
+        SERPAPI_API_KEY="$SERPAPI_API_KEY"
         EOG
 
         # Create a python virtual environment
