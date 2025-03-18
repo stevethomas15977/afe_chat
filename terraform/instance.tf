@@ -36,10 +36,12 @@ resource "aws_lightsail_instance" "instance" {
 
         # Clone the GitHub repository
         cd $HOME
-        git clone https://github.com/stevethomas15977/afe_chat.git
+        mkdir -p $APP
+        cd $APP
+        git clone https://github.com/stevethomas15977/afe_chat.git .
         git checkout $BRANCH_NAME
         
-        sh -c "cat > $HOME/.env" <<EOG
+        sh -c "cat > $HOME/$APP/.env" <<EOG
         HOME="$HOME"
         PYTHONPATH="$PYTHONPATH:models:helpers:services:database"
         VERSION="1.0"
