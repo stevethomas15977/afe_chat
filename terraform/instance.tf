@@ -61,7 +61,8 @@ resource "aws_lightsail_instance" "instance" {
 
         # Create a python virtual environment
         python_version=$(python3 --version | awk '{print $2}')
-        uv venv --python $python_version
+        $HOME/.local/bin/uv venv --python $python_version
+        source .venv/bin/activate
 
         # Adjust permissions
         chown -R ubuntu:ubuntu $HOME
