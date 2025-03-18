@@ -19,6 +19,9 @@ resource "aws_lightsail_instance" "instance" {
         #!/bin/bash
         apt-get update -y
 
+        # Install UV
+        sudo curl -LsSf https://astral.sh/uv/install.sh | sh
+
         # Set up the environment variables
         export BRANCH_NAME="${var.branch}"
         export GH_PAT="${var.ghpat}"
@@ -27,16 +30,13 @@ resource "aws_lightsail_instance" "instance" {
         export APP="afe_chat"
         export APP_ROOT="/home/ubuntu"
         export APP_PATH=$APP_ROOT/$APP
-        
+
         # Clone the GitHub repository
         cd $APP_ROOT
         mkdir -p $APP_PATH
         cd $APP_PATH
         git clone https://github.com/stevethomas15977/afe_chat.git .
         git checkout $BRANCH_NAME
-
-        # Adjust permissions
-        chown -R ubuntu:ubuntu $APP_PATH
 
         sh -c "cat > $APP_PATH/.env" <<EOG
         PYTHONPATH="$PYTHONPATH:models:helpers:services:database"
@@ -47,13 +47,22 @@ resource "aws_lightsail_instance" "instance" {
         APP_PATH="$APP_PATH"
         USERNAME="afe_chat"
         APP_SECRET="$APP_SECRET"
-        S3_BUCKET_NAME="$S3_BUCKET_NAME"
         LANGCHAIN_API_KEY="$LANGCHAIN_API_KEY"
         LANGCHAIN_TRACING_V2="true"
         OPENAI_API_KEY="$OPENAI_API_KEY"
         SERP_API_KEY="$SERP_API_KEY"
         EOG
+        
+        # Source the environment variables
+        source $APP_PATH/.env
 
+        # Create a python virtual environment
+        python_version=$(python3 --version | awk '{print $2}')
+        uv venv --python $python_version
+
+        # Adjust permissions
+        chown -R ubuntu:ubuntu $APP_PATH
+        
         touch /var/log/user_data_complete
         chmod 644 /var/log/user_data_complete
 
