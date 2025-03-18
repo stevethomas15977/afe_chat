@@ -36,7 +36,7 @@ resource "aws_lightsail_instance" "instance" {
 
         # Clone the GitHub repository
         cd $HOME
-        git clone https://github.com/stevethomas15977/afe_chat.git .
+        git clone https://github.com/stevethomas15977/afe_chat.git
         git checkout $BRANCH_NAME
         
         sh -c "cat > $HOME/.env" <<EOG
