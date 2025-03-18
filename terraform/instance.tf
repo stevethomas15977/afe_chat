@@ -43,7 +43,7 @@ resource "aws_lightsail_instance" "instance" {
         git clone https://github.com/stevethomas15977/afe_chat.git .
         git checkout $BRANCH_NAME
 
-        sh -c "cat > $APP_PATH/.env" <<EOG
+        sh -c "cat > $APP_ROOT/.env" <<EOG
         HOME="$HOME"
         PYTHONPATH="$PYTHONPATH:models:helpers:services:database"
         VERSION="1.0"
@@ -60,10 +60,11 @@ resource "aws_lightsail_instance" "instance" {
         EOG
 
         # Create a python virtual environment
+        cd $APP_ROOT
         python_version=$(python3 --version | awk '{print $2}')
         $HOME/.local/bin/uv venv --python $python_version
-        source .venv/bin/activate
-
+        $HOME/.local/bin/uv sync  
+        
         # Adjust permissions
         chown -R ubuntu:ubuntu $HOME
 
