@@ -35,3 +35,18 @@ variable "branch" {
     type        = string
     default     = "main"
 }
+
+variable "langchain_api_key" {
+    description = "Langchain API key"
+    type        = string
+}
+
+variable "openai_api_key" {
+    description = "OpenAI API key"
+    type        = string
+}
+
+variable "serpapi_api_key" {
+    description = "SERP API key"
+    type        = string
+}

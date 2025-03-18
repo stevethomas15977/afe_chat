@@ -36,9 +36,9 @@ jobs:
           echo "TF_VAR_branch=${{ env.BRANCH_NAME }}" >> $GITHUB_ENV
           echo "TF_VAR_ghpat=${{ secrets.AFE_CHAT_GH_PAT }}" >> $GITHUB_ENV
           echo "TF_VAR_appsecret=${{ secrets.APP_SECRET }}" >> $GITHUB_ENV
-          echo "LANGCHAIN_API_KEY=${{ secrets.LANGCHAIN_API_KEY }}" >> $GITHUB_ENV
-          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
-          echo "SERPAPI_API_KEY=${{ secrets.SERPAPI_API_KEY }}" >> $GITHUB_ENV
+          echo "TF_VAR_langchain_api_key=${{ secrets.LANGCHAIN_API_KEY }}" >> $GITHUB_ENV
+          echo "TF_VAR_openai_api_Key=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
+          echo "TF_VAR_serpapi_api_Key=${{ secrets.SERPAPI_API_KEY }}" >> $GITHUB_ENV
 
           if [ "${{ github.event.inputs.environment }}" == "prod" ]; then
             echo "AWS_ACCESS_KEY_ID=${{ vars.PROD_AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
