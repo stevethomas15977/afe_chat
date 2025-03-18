@@ -1,5 +1,5 @@
 [project]
-name = "afe_chat
+name = "afe_chat"
 version = "0.1.0"
 description = "AFE AI Chat"
 readme = "README.md"
