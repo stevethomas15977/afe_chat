@@ -8,5 +8,8 @@ if [ -f .env ]; then
   export $(grep -v '^#' .env | xargs)
 fi
 
-cd api
+cd /home/ubuntu/afe_chat/api
 /home/ubuntu/.local/bin/uv run uvicorn main:app --workers 2 --host 0.0.0.0 --port 8000
+
+cd /home/ubuntu/afe_chat/app
+npm run dev

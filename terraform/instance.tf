@@ -19,6 +19,9 @@ resource "aws_lightsail_instance" "instance" {
         #!/bin/bash
         apt-get update -y
 
+        TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`
+        export PRIVATE_IP=`curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/local-ipv4`
+
         # Set up the environment variables
         export HOME="/home/ubuntu"
         export BRANCH_NAME="${var.branch}"
@@ -53,6 +56,7 @@ resource "aws_lightsail_instance" "instance" {
         LANGCHAIN_TRACING_V2="true"
         OPENAI_API_KEY="$OPENAI_API_KEY"
         SERPAPI_API_KEY="$SERPAPI_API_KEY"
+        PRIVATE_IP="$PRIVATE_IP"
         EOG
 
         # Create a python virtual environment
@@ -60,9 +64,14 @@ resource "aws_lightsail_instance" "instance" {
         $HOME/.local/bin/uv venv --python $python_version
         $HOME/.local/bin/uv sync  
 
+        # Install NODE and NPM
+        sudo apt install nodejs npm -y
+        cd $HOME/$APP/app
+        npm install
+        cd $HOME/$APP
+        
         # Adjust permissions
         chown -R ubuntu:ubuntu $HOME
-
 
         # Create the AFE service file and start the service
         sudo sh -c "cat > /etc/systemd/system/afe_chat.service" <<EOT

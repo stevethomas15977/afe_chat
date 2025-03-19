@@ -7,12 +7,14 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import uvicorn
 
+import os
+
 # initilizing our application
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Your frontend URL
+    allow_origins=[f"http://{os.getenv('PRIVATE_IP')}:3000"],  # Your frontend URL
     allow_credentials=True,
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
