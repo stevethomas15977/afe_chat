@@ -63,6 +63,30 @@ resource "aws_lightsail_instance" "instance" {
         # Adjust permissions
         chown -R ubuntu:ubuntu $HOME
 
+
+        # Create the AFE service file and start the service
+        sudo sh -c "cat > /etc/systemd/system/afe_chat.service" <<EOT
+        [Unit]
+        Description=afe daemon
+        After=network.target
+
+        [Service]
+        User=ubuntu
+        Group=ubuntu
+        WorkingDirectory=/home/ubuntu/afe_chat
+        ExecStart=/bin/bash /home/ubuntu/afe_chat/start.sh
+
+        [Install]
+        WantedBy=multi-user.target
+        EOT
+
+        sudo setcap 'cap_net_bind_service=+ep' /usr/bin/python3.12
+
+        sudo systemctl daemon-reload
+        sudo systemctl start afe_chat
+        sudo systemctl enable afe_chat
+        sudo systemctl status afe_chat --no-pager
+
         touch /var/log/user_data_complete
         chmod 644 /var/log/user_data_complete
 
