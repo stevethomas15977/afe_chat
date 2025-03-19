@@ -68,13 +68,20 @@ resource "aws_lightsail_instance" "instance" {
         sudo apt install nodejs npm -y
         cd $HOME/$APP/app
         npm install
+        cd $HOME/$APP/app/src/components
+        awk -v env_var="$PRIVATE_IP" '{gsub(/localhost/, env_var, $0); print}' TextArea.tsx > temp_file && mv temp_file TextArea.tsx
+
+        # Setup CORS
+        cd $HOME/$APP/api
+        awk -v env_var="$PRIVATE_IP" '{gsub(/localhost/, env_var, $0); print}' main.py > temp_file && mv temp_file main.py
+
         cd $HOME/$APP
         
         # Adjust permissions
         chown -R ubuntu:ubuntu $HOME
 
-        # Create the AFE service file and start the service
-        sudo sh -c "cat > /etc/systemd/system/afe_chat.service" <<EOT
+        # Create the AFE API service file and start the service
+        sudo sh -c "cat > /etc/systemd/system/afe_api.service" <<EOT
         [Unit]
         Description=afe daemon
         After=network.target
@@ -83,7 +90,7 @@ resource "aws_lightsail_instance" "instance" {
         User=ubuntu
         Group=ubuntu
         WorkingDirectory=/home/ubuntu/afe_chat
-        ExecStart=/bin/bash /home/ubuntu/afe_chat/start.sh
+        ExecStart=/bin/bash /home/ubuntu/afe_chat/start_api.sh
 
         [Install]
         WantedBy=multi-user.target
@@ -92,12 +99,51 @@ resource "aws_lightsail_instance" "instance" {
         sudo setcap 'cap_net_bind_service=+ep' /usr/bin/python3.12
 
         sudo systemctl daemon-reload
-        sudo systemctl start afe_chat
-        sudo systemctl enable afe_chat
-        sudo systemctl status afe_chat --no-pager
+        sudo systemctl start afe_api
+        sudo systemctl enable afe_api
+        sudo systemctl status afe_api --no-pager
+
+        # Create the AFE APP service file and start the service
+        sudo sh -c "cat > /etc/systemd/system/afe_app.service" <<EOT
+        [Unit]
+        Description=afe daemon
+        After=network.target
+
+        [Service]
+        User=ubuntu
+        Group=ubuntu
+        WorkingDirectory=/home/ubuntu/afe_chat
+        ExecStart=/bin/bash /home/ubuntu/afe_chat/start_app.sh
+
+        [Install]
+        WantedBy=multi-user.target
+        EOT
+
+        sudo setcap 'cap_net_bind_service=+ep' /usr/bin/python3.12
+
+        sudo systemctl daemon-reload
+        sudo systemctl start afe_app
+        sudo systemctl enable afe_app
+        sudo systemctl status afe_app --no-pager
 
         touch /var/log/user_data_complete
         chmod 644 /var/log/user_data_complete
 
     EOF
+}
+
+resource "aws_lightsail_instance_public_ports" "public_ports" {
+    instance_name = aws_lightsail_instance.instance.name
+
+    port_info {
+      from_port = 3000
+      to_port = 3000
+      protocol = "tcp"
+    }
+
+    port_info {
+      from_port = 8000
+      to_port = 8000
+      protocol = "tcp"
+    }
 }

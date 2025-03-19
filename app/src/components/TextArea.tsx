@@ -46,8 +46,7 @@ const TextArea = ({
     setIsGenerating(true);
 
     try {
-      const privateIp = process.env.PRIVATE_IP;
-      const res = await fetch(`http://${privateIp}:8000/invoke?content=${text}`, {
+      const res = await fetch(`http://localhost:8000/invoke?content=${text}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -9,7 +9,4 @@ if [ -f .env ]; then
 fi
 
 cd /home/ubuntu/afe_chat/api
-/home/ubuntu/.local/bin/uv run uvicorn main:app --workers 2 --host 0.0.0.0 --port 8000
-
-cd /home/ubuntu/afe_chat/app
-npm run dev
+/home/ubuntu/.local/bin/uv run uvicorn main:app --workers 2 > /var/log/afe_api.log 2>&1
