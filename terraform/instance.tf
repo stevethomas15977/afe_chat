@@ -20,7 +20,7 @@ resource "aws_lightsail_instance" "instance" {
         apt-get update -y
 
         TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`
-        export PRIVATE_IP=`curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/local-ipv4`
+        export PUBLIC_IP=`curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/public-ipv4`
 
         # Set up the environment variables
         export HOME="/home/ubuntu"
@@ -69,11 +69,11 @@ resource "aws_lightsail_instance" "instance" {
         cd $HOME/$APP/app
         npm install
         cd $HOME/$APP/app/src/components
-        awk -v env_var="$PRIVATE_IP" '{gsub(/localhost/, env_var, $0); print}' TextArea.tsx > temp_file && mv temp_file TextArea.tsx
+        awk -v env_var="$PUBLIC_IP" '{gsub(/localhost/, env_var, $0); print}' TextArea.tsx > temp_file && mv temp_file TextArea.tsx
 
         # Setup CORS
         cd $HOME/$APP/api
-        awk -v env_var="$PRIVATE_IP" '{gsub(/localhost/, env_var, $0); print}' main.py > temp_file && mv temp_file main.py
+        awk -v env_var="$PUBLIC_IP" '{gsub(/localhost/, env_var, $0); print}' main.py > temp_file && mv temp_file main.py
 
         cd $HOME/$APP
         
@@ -134,6 +134,12 @@ resource "aws_lightsail_instance" "instance" {
 
 resource "aws_lightsail_instance_public_ports" "public_ports" {
     instance_name = aws_lightsail_instance.instance.name
+
+    port_info {
+       from_port = 22
+       to_port = 22
+       protocol = "tcp"
+     }
 
     port_info {
       from_port = 3000

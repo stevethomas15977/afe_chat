@@ -7,4 +7,4 @@ if [ -f .env ]; then
 fi
 
 cd /home/ubuntu/afe_chat/app
-npm run dev > /var/log/afe_app.log 2>&1
+npm run dev > /home/ubuntu/afe_chat/app/afe_app.log 2>&1
