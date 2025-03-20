@@ -2,14 +2,9 @@
 
 ## Could be used as a starting point for AI agent development.
 
-Based on examples from https://www.youtube.com/watch?v=Cyv-dgv80kE & https://www.aurelio.ai/course/langchain
-
-## Local development
 ### Run the API locally
 
 * `cd` into the `/api` directory
 * execute `uv run uvicorn main:app --reload` to start the API
 * you can find the API docs at `http://localhost:8000/docs`
-* you can test the streaming by running the `streaming-test.ipynb` notebook
-
-### Test with notebook api-test.ipynb
+* you can test the streaming by running the `api-test.ipynb` notebook
