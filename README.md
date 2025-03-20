@@ -2,6 +2,8 @@
 
 ## Could be used as a starting point for AI agent development.
 
+#### Based on examples from https://github.com/aurelio-labs/langchain-course
+
 ### Run the API locally
 
 * `cd` into the `/api` directory
