@@ -1,16 +1,15 @@
-# afe_chat
-AFE AI Chat Agent
+# Agent with RAG tooling built with LangChain, OpenAI, Node, Google Search API, AWS, and Terraform.
 
-## Run the API locally
+## Could be used as a starting point for AI agent development.
+
+Based on examples from https://www.youtube.com/watch?v=Cyv-dgv80kE & https://www.aurelio.ai/course/langchain
+
+## Local development
+### Run the API locally
 
 * `cd` into the `/api` directory
 * execute `uv run uvicorn main:app --reload` to start the API
 * you can find the API docs at `http://localhost:8000/docs`
 * you can test the streaming by running the `streaming-test.ipynb` notebook
 
-## Run the App locally
-
-* `cd` into the `/app` directory
-* execute `npm install` to install the dependencies
-* execute `npm run dev` to start the app
-* you can find the app at `http://localhost:3000`
+### Test with notebook api-test.ipynb
