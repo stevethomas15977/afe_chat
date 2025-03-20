@@ -1,4 +1,4 @@
-# Agent with RAG tooling built with LangChain, OpenAI, Node, Google Search API, AWS, and Terraform.
+# Agent with RAG tooling built with LangChain, OpenAI, Node, Google Search API; deployable to AWS via Terraform.
 
 ## Could be used as a starting point for AI agent development.
 
